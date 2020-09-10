@@ -28,7 +28,7 @@ app.get('/', function(req, res) {
 console.log(process.env.API_KEY, ' ', process.env.PAGE_ID);
 
 Fb.options({accessToken: process.env.API_KEY});
-Fb.api(`/${process.env.PAGE_ID}/leadgen_forms`, function (response) {
+Fb.api('/' + process.env.PAGE_ID + '/leadgen_forms', function (response) {
   console.log(response)
 });
 
