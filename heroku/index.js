@@ -5,14 +5,17 @@
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-var bodyParser = require('body-parser');
-var express = require('express');
-var app = express();
-var xhub = require('express-x-hub');
+const bodyParser = require('body-parser');
+const express = require('express');
+const app = express();
+const xhub = require('express-x-hub');
+const Fb = require('fb');
 
 app.set('port', (process.env.PORT || 5000));
-app.listen(app.get('port'));
+app.listen(app.get('port'), error => {
+  if (error) throw error;
+  console.log('Server up and running');
+});
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
@@ -23,6 +26,13 @@ var received_updates = [];
 app.get('/', function(req, res) {
   console.log(req);
   res.send('<pre>' + JSON.stringify(received_updates, null, 2) + '</pre>');
+});
+
+console.log(process.env.API_KEY, ' ', process.env.PAGE_ID);
+
+Fb.options({accessToken: process.env.API_KEY});
+Fb.api(`/${process.env.PAGE_ID}/leadgen_forms`, function (response) {
+  console.log(response)
 });
 
 app.get(['/facebook', '/instagram'], function(req, res) {
