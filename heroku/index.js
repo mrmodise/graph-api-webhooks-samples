@@ -12,10 +12,7 @@ const xhub = require('express-x-hub');
 const Fb = require('fb');
 
 app.set('port', (process.env.PORT || 5000));
-app.listen(app.get('port'), error => {
-  if (error) throw error;
-  console.log('Server up and running');
-});
+app.listen(app.get('port'));
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
