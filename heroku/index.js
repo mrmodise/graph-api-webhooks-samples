@@ -25,11 +25,18 @@ app.get('/', function(req, res) {
   res.send('<pre>' + JSON.stringify(received_updates, null, 2) + '</pre>');
 });
 
-console.log(process.env.API_KEY, ' ', process.env.PAGE_ID);
+app.get('/leads', function (req, res) {
+  Fb.options({accessToken: process.env.TOKEN});
+  Fb.api('/' + process.env.PAGE_ID + '/leadgen_forms', function (response) {
+    if (response && !response.error) {
+      res.send(response);
+      res.sendStatus(200);
+    }
 
-Fb.options({accessToken: process.env.TOKEN});
-Fb.api('/' + process.env.PAGE_ID + '/leadgen_forms', function (response) {
-  console.log(response)
+    res.sendStatus(400);
+
+    console.error(response)
+  });
 });
 
 app.get(['/facebook', '/instagram'], function(req, res) {
