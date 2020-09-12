@@ -13,12 +13,12 @@ app.use(bodyParser.json());
 // A token that Facebook will echo back to you as part of callback URL verification.
 const VERIFY_TOKEN = process.env.TOKEN;
 
-app.get('/', (req, res) => {
+app.get('/', function (req, res) {
   res.send('App up and running');
 });
 
 // Endpoint for verifying webhook subscripton
-app.get('/leadgen', (req, res) => {
+app.get('/leadgen', function (req, res) {
   if (!req.query) {
     res.send({success: false, reason: 'Empty request params'});
     return;
@@ -53,11 +53,11 @@ const GRAPH_API_ENDPOINT = `https://graph.facebook.com/${GRAPH_API_VERSION}`;
 
 const accessToken = process.env.TOKEN;
 // Facebook will post realtime leads to this endpoint if we've already subscribed to the webhook in part 1.
-app.post('/leadgen', (req, res) => {
+app.post('/leadgen', function (req, res) {
   const entry = req.body.entry;
 
-  entry.forEach(page => {
-    page.changes.forEach(change => {
+  entry.forEach(function (page) {
+    page.changes.forEach(function (change) {
       // We get page, form, and lead IDs from the change here.
       // We need the lead gen ID to get the lead data.
       // The form ID and page ID are optional. You may want to record them into your CRM system.
@@ -70,18 +70,18 @@ app.post('/leadgen', (req, res) => {
       const leadgenURI = `${GRAPH_API_ENDPOINT}/${leadgen_id}?access_token=${accessToken}`;
 
       axios(leadgenURI)
-          .then(response => {
+          .then(function (response) {
             const {created_time, id, field_data} = response.data;
 
             // Handle lead answer here (insert data into your CRM system)
             console.log('Lead id', id);
             console.log('Created time', created_time);
-            field_data.forEach(field => {
+            field_data.forEach(function (field) {
               console.log('Question ', field.name);
               console.log('Answers ', field.values);
             });
           })
-          .catch(error => {
+          .catch(function (error) {
             // Handle error here
             console.log(error);
           });
@@ -92,6 +92,7 @@ app.post('/leadgen', (req, res) => {
 });
 
 // Start web server
-app.listen(SERVER_PORT, () =>
-    console.log(`Server is listening at localhost:${SERVER_PORT}`)
+app.listen(SERVER_PORT, function () {
+      return console.log(`Server is listening at localhost:${SERVER_PORT}`);
+    }
 );
