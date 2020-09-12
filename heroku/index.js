@@ -2,7 +2,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const express = require('express');
 
-const SERVER_PORT = 3000;
+const SERVER_PORT = 5000;
 const app = express();
 app.use(bodyParser.json());
 
