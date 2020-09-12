@@ -95,3 +95,30 @@ app.post('/leadgen', (req, res) => {
 app.listen(SERVER_PORT, () =>
     console.log(`Server is listening at localhost:${SERVER_PORT}`)
 );
+
+
+app.get(['/facebook', '/instagram'], function(req, res) {
+  if (
+      req.query['hub.mode'] === 'subscribe' &&
+      req.query['hub.verify_token'] === accessToken
+  ) {
+    res.send(req.query['hub.challenge']);
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+app.post('/facebook', function(req, res) {
+  console.log('Facebook request body:', req.body);
+
+  if (!req.isXHubValid()) {
+    console.log('Warning - request header X-Hub-Signature not present or invalid');
+    res.sendStatus(401);
+    return;
+  }
+
+  console.log('request header X-Hub-Signature validated');
+  // Process the Facebook updates here
+  received_updates.unshift(req.body);
+  res.sendStatus(200);
+});
