@@ -1,8 +1,6 @@
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 
 const SERVER_PORT = 3000;
 const app = express();
@@ -14,6 +12,10 @@ app.use(bodyParser.json());
 
 // A token that Facebook will echo back to you as part of callback URL verification.
 const VERIFY_TOKEN = process.env.TOKEN;
+
+app.get('/', (req, res) => {
+  res.send('App up and running');
+});
 
 // Endpoint for verifying webhook subscripton
 app.get('/leadgen', (req, res) => {
