@@ -49,7 +49,7 @@ app.get('/leadgen', function (req, res) {
 
 // Graph API endpoint
 const GRAPH_API_VERSION = 'v2.12';
-const GRAPH_API_ENDPOINT = `https://graph.facebook.com/${GRAPH_API_VERSION}`;
+const GRAPH_API_ENDPOINT = 'https://graph.facebook.com/' + GRAPH_API_VERSION;
 
 const accessToken = process.env.TOKEN;
 // Facebook will post realtime leads to this endpoint if we've already subscribed to the webhook in part 1.
@@ -63,11 +63,11 @@ app.post('/leadgen', function (req, res) {
       // The form ID and page ID are optional. You may want to record them into your CRM system.
       const {page_id, form_id, leadgen_id} = change.value;
       console.log(
-          `Page ID ${page_id}, Form ID ${form_id}, Lead gen ID ${leadgen_id}`
+          'Page ID ', page_id, ', Form ID ', form_id , ', Lead gen ID ', leadgen_id
       );
 
       // Call graph API to request lead info with the lead ID and access token.
-      const leadgenURI = `${GRAPH_API_ENDPOINT}/${leadgen_id}?access_token=${accessToken}`;
+      const leadgenURI = GRAPH_API_ENDPOINT + '/' + leadgen_id + '?access_token=' + accessToken;
 
       axios(leadgenURI)
           .then(function (response) {
@@ -93,6 +93,6 @@ app.post('/leadgen', function (req, res) {
 
 // Start web server
 app.listen(SERVER_PORT, function () {
-      return console.log(`Server is listening at localhost:${SERVER_PORT}`);
+      return console.log('Server is listening at localhost: ', SERVER_PORT);
     }
 );
