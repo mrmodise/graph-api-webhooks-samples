@@ -12,9 +12,11 @@ app.use(bodyParser.json());
 
 // A token that Facebook will echo back to you as part of callback URL verification.
 const VERIFY_TOKEN = process.env.TOKEN;
+const received_updates = [];
 
 app.get('/', (req, res) => {
-  res.send('App up and running');
+  console.log(req);
+  res.send('<pre>' + JSON.stringify(received_updates, null, 2) + '</pre>');
 });
 
 // Endpoint for verifying webhook subscripton
@@ -50,7 +52,7 @@ app.get('/leadgen', (req, res) => {
 // Graph API endpoint
 const GRAPH_API_VERSION = 'v2.12';
 const GRAPH_API_ENDPOINT = `https://graph.facebook.com/${GRAPH_API_VERSION}`;
-
+const xhub = require('express-x-hub');
 const accessToken = process.env.TOKEN;
 // Facebook will post realtime leads to this endpoint if we've already subscribed to the webhook in part 1.
 app.post('/leadgen', (req, res) => {
@@ -107,6 +109,8 @@ app.get(['/facebook', '/instagram'], function(req, res) {
     res.sendStatus(400);
   }
 });
+
+app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 
 app.post('/facebook', function(req, res) {
   console.log('Facebook request body:', req.body);
